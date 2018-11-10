@@ -10,7 +10,7 @@
 :toc: left
 
 // --------------------------------------------------------
-= Introduction
+== Introduction
 
 The 6502 MPU has traditionally used an assembler notation with characteristic
 three-character upper-case opcodes. This can be traced at least all the way back
@@ -34,7 +34,7 @@ tries to make the code easier to read, easier to process and even faster to type
 
 
 // --------------------------------------------------------
-= What is wrong with the traditional notation
+== What is wrong with the traditional notation
 
 The most glaring problem is that a lot of the opcodes do not by themselves
 define which machine language instruction they code for. Put differently, the
@@ -64,11 +64,11 @@ more than a comma, the hash sign, and round brackets:
 
 |===
 
-`LDA #$00`    | immediate
-`LDA $1000`   | absolute 
-`LDA $1000,X` | absolute X indexed 
-`LDA $10`     | zero page / direct page 
-`LDA ($10)`   | zero page / direct page indirect (65c02)
+| `LDA #$00`    | immediate
+| `LDA $1000`   | absolute 
+| `LDA $1000,X` | absolute X indexed 
+| `LDA $10`     | zero page / direct page 
+| `LDA ($10)`   | zero page / direct page indirect (65c02)
 
 |===
 
@@ -82,9 +82,10 @@ indirect modes.  Traditional 65816 assembler notation can end up looking like
 something from a bash shell script or a regex instruction.
 
 |===
-`LDA >$7512`  | long addressing (forced)
-`LDA [$17],Y` | direct page indirect long indexed with Y 
-`LDA !12000`  | absolute (forced), decimal address
+
+|`LDA >$7512`  | long addressing (forced)
+|`LDA [$17],Y` | direct page indirect long indexed with Y 
+|`LDA !12000`  | absolute (forced), decimal address
 |===
 
 The long list of special characters not only makes the code hard to read, but
@@ -95,7 +96,7 @@ ten-finger typists.
 
 
 // --------------------------------------------------------
-= What is _really_ wrong with the traditional notation: The 65816
+== What is _really_ wrong with the traditional notation: The 65816
 
 Where the traditional syntax falls apart is with the new instructions such as
 `PEA` and `BRL`. `PEA` is one offender: Formally called "Push Effective Absolute
@@ -117,7 +118,7 @@ the length of the operand as shown above, the "long" form of the branch
 instruction is given its own mnemonic, `BRL`.
 
 // --------------------------------------------------------
-= Constructing an improved syntax
+== Constructing an improved syntax
 
 When setting out to get rid of these problems, we have to remember that any new
 system must remain easy to read for coders who see it for the first time, even
@@ -173,7 +174,7 @@ common stem `phe` (PusH Effective address) and different suffixes. These new
 versions are discussed below.
 
 // --------------------------------------------------------
-= Complete list of addressing modes 
+== Complete list of addressing modes 
 
 The mnemonic suffixes follow the names of the addressing modes. The "naked" stem
 without a suffix is used for either for Implied instructions (such as `dex`) or
@@ -194,40 +195,35 @@ These and other variants give us the following complete list of modes (for the
 65816):
 
 |===
-Mode                      |  Traditional Notation |  Simpler Notation
+|Mode                      |  Traditional Notation |  Simpler Notation
 
-Implied                   |  `DEX`               |  `dex`
-Absolute                  |  `LDA $1000`         |  `lda $1000`
-Accumulator               |  `INC A`             |  `inc.a`
-Immediate                 |  `LDA #$00`          |  `lda.# $00`
-Absolute X indexed        |  `LDA $1000,X`       |  `lda.x $1000`
-Absolute Y indexed        |  `LDA $1000,Y`       |  `lda.y $1000`
-Absolute indirect         |  `JMP ($1000)`       |  `jmp.i $1000`
-Indexed indirect          |  `JMP ($1000,X)`     |  `jmp.xi $1000`
-Absolute long             |  `JMP $101000`       |  `jmp.l $101000` <1> 
-Absolute long X indexed   |  `JMP $101000,X`     |  `jmp.lx $101000`
-Absolute indirect long    |  `JMP [$1000]`       |  `jmp.il $1000` <2>
-Direct page (DP)          |  `LDA $10`           |  `lda.z $10` <3>
-Direct page X indexed     |  `LDA $10,X`         |  `lda.zx $10`
-Direct page Y indexed     |  `LDX $10,Y`         |  `ldx.zy $10`
-Direct page indirect      |  `LDA ($10)`         |  `lda.zi $10`
-DP indirect X indexed     |  `LDA ($10,X)`       |  `lda.zxi $10`
-DP indirect Y indexed     |  `LDA ($10),Y`       |  `lda.ziy $10`
-DP indirect long          |  `LDA [$10]`         |  `lda.zil $10`
-DP indirect long Y index  |  `LDA [$10],Y`       |  `lda.zily $10`
-Relative                  |  `BRA <LABEL>`       |  `bra <LABEL>`
-Relative long             |  `BRL <LABEL>`       |  `bra.l <LABEL>`
-Stack relative            |  `LDA 3,S`           |  `lda.s 3`
-Stack rel ind Y indexed   |  `LDA (3,S),Y`       |  `lda.siy 3`
-Block move                |  `MVP 0,0`           |  `mvp 0 0`
+|Implied                   |  `DEX`               |  `dex`
+|Absolute                  |  `LDA $1000`         |  `lda $1000`
+|Accumulator               |  `INC A`             |  `inc.a`
+|Immediate                 |  `LDA #$00`          |  `lda.# $00`
+|Absolute X indexed        |  `LDA $1000,X`       |  `lda.x $1000`
+|Absolute Y indexed        |  `LDA $1000,Y`       |  `lda.y $1000`
+|Absolute indirect         |  `JMP ($1000)`       |  `jmp.i $1000`
+|Indexed indirect          |  `JMP ($1000,X)`     |  `jmp.xi $1000`
+|Absolute long             |  `JMP $101000`       |  `jmp.l $101000`
+|Absolute long X indexed   |  `JMP $101000,X`     |  `jmp.lx $101000`
+|Absolute indirect long    |  `JMP [$1000]`       |  `jmp.il $1000`
+|Direct page (DP)          |  `LDA $10`           |  `lda.z $10`
+|Direct page X indexed     |  `LDA $10,X`         |  `lda.zx $10`
+|Direct page Y indexed     |  `LDX $10,Y`         |  `ldx.zy $10`
+|Direct page indirect      |  `LDA ($10)`         |  `lda.zi $10`
+|DP indirect X indexed     |  `LDA ($10,X)`       |  `lda.zxi $10`
+|DP indirect Y indexed     |  `LDA ($10),Y`       |  `lda.ziy $10`
+|DP indirect long          |  `LDA [$10]`         |  `lda.zil $10`
+|DP indirect long Y index  |  `LDA [$10],Y`       |  `lda.zily $10`
+|Relative                  |  `BRA <LABEL>`       |  `bra <LABEL>`
+|Relative long             |  `BRL <LABEL>`       |  `bra.l <LABEL>`
+|Stack relative            |  `LDA 3,S`           |  `lda.s 3`
+|Stack rel ind Y indexed   |  `LDA (3,S),Y`       |  `lda.siy 3`
+|Block move                |  `MVP 0,0`           |  `mvp 0 0`
 |===
-<1> As syntactic sugar, a colon is allowed between the bank byte and the rest of
-the address on the 65816 (`$10:1000`), see below
-<2> The `l` for the long variants are placed after the `i` in indirect modes
-<3> Though the mode is called "direct page", we keep the `z` from zero page on
-the 6502/65c02 to avoid having two different suffixes
 
-== Code example
+=== Code example
 
 We can compare the two notations with a 6502 code fragment: 
 
@@ -245,20 +241,20 @@ If the changes seem minor, remember this is intentional: The code must remain
 readable for people not familiar with the new syntax.
 
 // --------------------------------------------------------
-= Modified mnemonics for the 65816
+== Modified mnemonics for the 65816
 
 The changes to the 65816 mnemonics mainly involve defining a common stem and
 adding suffixes instead of creating new mnemonics as in the traditional variant.
 
 |===
 
-`BRL`  |  `bra.l`   |    Branch long
-`JML`  |  `jmp.l`   |    Jump absolute long
-`JSL`  |  `jsr.l`   |    Jump subroutine long
-`PEA`  |  `phe.#`   |    Push effective absolute address
-`PEI`  |  `phe.d`   |    Push effective indirect address
-`PER`  |  `phe.r`   |    Push effective relative address
-`RTL`  |  `rts.l`   |    Return subroutine long
+|`BRL`  |  `bra.l`   |    Branch long
+|`JML`  |  `jmp.l`   |    Jump absolute long
+|`JSL`  |  `jsr.l`   |    Jump subroutine long
+|`PEA`  |  `phe.#`   |    Push effective absolute address
+|`PEI`  |  `phe.d`   |    Push effective indirect address
+|`PER`  |  `phe.r`   |    Push effective relative address
+|`RTL`  |  `rts.l`   |    Return subroutine long
 |===
 
 The only really difficult one is `phe.d`, which reflects the actual workings of
@@ -273,7 +269,7 @@ might also suggest `CMP` should be changed into `cpa` in keeping with `cpx` and
 `INC A` vs `INA`, which is why we stick with `inc.a`.
 
 // --------------------------------------------------------
-= Disadvantages of the new notation
+== Disadvantages of the new notation
 
 Apart from the obvious initial unfamiliarity, both the listing of all addresses
 and the small code fragment show that we give up the column formatting always
@@ -287,23 +283,26 @@ Using `z` for direct mode on the 65816 is
 
 
 // --------------------------------------------------------
-= Suggested conventions for assemblers
+== Suggested conventions for assemblers
 
 While we're at it, we might as well define a set of conventions for assemblers.
 Realistically, these are notes for myself. 
 
-== Number formatting
+=== Number formatting
 
 Traditionally, `$` has been used to designate hexadecimal and `%` binary
 numbers. This convention is too strong to be changed, though `0x` is the more
 common marker for hexadecimal numbers with modern computer languages. It should
 be accepted by assemblers for SAN. 
 
-== Directives
+As syntactic sugar, a colon `:` should be legal in 24 bit numbers to separate
+the bank byte from the rest of the address (e.g. `$10:0000`)
+
+=== Directives
 
 Directives should all start with a dot (`.`) and be the first word on the line.
 
-== Comments
+=== Comments
 
 Comments begin with `;` on the line.
 
@@ -311,13 +310,13 @@ NOTE: Since `(` and `)` are not used for the mnemonics any more, this opens the 
 to using them for Forth-like in-line comments. However, there seems to be little
 use for them in Assembler. 
 
-== Indentation
+=== Indentation
 
 Indentation is handled by spaces, not tabs, with eight spaces per indentation
 level. Labels and high-level comments start at the beginning of the line,
 directives on indentation in, and instructions two indentations in.
 
-== Postfix notation math
+=== Postfix notation math
 
 Since the `[` and `]` symbols are not used for the mnemonics any more, they can
 be used to designate a math term in postfix notation during assemble time.
@@ -325,17 +324,17 @@ Postfix math is easier to adapt to miniature stacks for primitive assemblers to
 run on a 6502/65c02/65816 system itself. Example: `[ 2 3 + ]`
 
 // --------------------------------------------------------
-= Tools for SAN
+== Tools for SAN
 
 Unsurprisingly, there are currently few tools for SAN. 
 
-== Assemblers for SAN
+=== Assemblers for SAN
 
 The disassembler of Tali Forth 2 for the 65c02
 (https://github.com/scotws/TaliForth2) outputs SAN. An assembler is being worked
 on that will accept SAN notation.
 
-=== Assemblers for TAN
+==== Assemblers for TAN
 
 Typist's Assembler Notation (TAN) was an early version of SAN (see below). There
 are a number of assemblers for TAN that should be easy to port to SAN, as the
@@ -350,13 +349,13 @@ The last two use postfix notation.
 Liara Forth for the 65816 was written in Typists' Assembler Notation (TAN), a
 proto-version of SAN (https://github.com/scotws/LiaraForth). 
 
-== Editor plugins
+=== Editor plugins
 
 There is a vim plugin for TAN which will be converted to SAN and included in
 this repository. See https://github.com/scotws/Typist-VIM-Syntax for the
 original plugin.
 
-== Automatic conversion
+=== Automatic conversion
 
 A program for automatic conversion from SAN to traditional assembler for the
 Ophis assembler is planned. 
@@ -365,7 +364,7 @@ There is a primitive tool to aid in converting traditional format to TAN named
 typ65conv (https://github.com/scotws/type65conv). Currently, it converts
 instructions only, not directives.
 
-== Formatting aids
+=== Formatting aids
 
 The Go (golang) language introduced the principle of having all formatting
 handled by a tool (`gofmt`) that provides the official variant. Such a tool
@@ -373,9 +372,9 @@ is planned for SAN once the specification is stable.
 
 
 // --------------------------------------------------------
-= Appendix
+== Appendix
 
-== Earlier versions
+=== Earlier versions
 
 The first reworking of the traditional syntax resulted in Typist's Assembler
 Notation (TAN). It included more radical -- in the end, too radical --
@@ -386,7 +385,7 @@ Page on the 6502/65c02. The parts were called "body" and "tail" instead of
 https://docs.google.com/document/d/16Sv3Y-3rHPXyxT1J3zLBVq4reSPYtY2G6OSojNTm4SQ
 for the specification. TAN is deprecated.
 
-== Postfix variants (Forth)
+=== Postfix variants (Forth)
 
 Reducing the operands to pure parameter data makes it easy to use the same
 system with postfix formatted assemblers such as those written in Forth: Opcode
@@ -416,20 +415,20 @@ There are four directives to use with forward references in single-pass postfix 
 
 |===
 
-`<j`  | jump absolute (for `jmp`, `jsr`); 2 byte operand
-`<jl` | jump absolute long (for `jmp.l`, `jsr.l`); 3 byte operand
-`<b`  | branch relative (for `bra`, `bne`, etc); 1 byte operand
-`<bl` | branch relative long (for `bra.l`); 2 byte operand
+| `<j`  | jump absolute (for `jmp`, `jsr`); 2 byte operand
+| `<jl` | jump absolute long (for `jmp.l`, `jsr.l`); 3 byte operand
+| `<b`  | branch relative (for `bra`, `bne`, etc); 1 byte operand
+| `<bl` | branch relative long (for `bra.l`); 2 byte operand
 |===
 
 In this version `->` is used as a label directive.
-== Further information and help
+=== Further information and help
 
 For all things to do with the 6502/65c02/65816, see http://www.6502.org/ Very
 nice, very helpful people. 
 
 [bibliography]
-= References and further reading
+== References and further reading
 
 [[[ENL]]] _Programming the 65816. Including the 6502, 65C02 and 65802_, 
 David Eyes and Ron Lichty 
