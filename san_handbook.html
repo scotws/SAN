@@ -435,7 +435,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_introduction">Introduction</a></li>
 <li><a href="#_what_is_wrong_with_the_traditional_notation">What is wrong with the traditional notation</a></li>
-<li><a href="#_what_is_em_really_em_wrong_with_the_traditional_notation_the_65816">What is <em>really</em> wrong with the traditional notation: The 65816</a></li>
+<li><a href="#_what_is_em_really_em_wrong_with_the_traditional_notation">What is <em>really</em> wrong with the traditional notation</a></li>
 <li><a href="#_constructing_an_improved_syntax">Constructing an improved syntax</a></li>
 <li><a href="#_complete_list_of_addressing_modes">Complete list of addressing modes</a>
 <ul class="sectlevel2">
@@ -503,13 +503,14 @@ tries to make the code easier to read, easier to process and even faster to type
 <h2 id="_what_is_wrong_with_the_traditional_notation">What is wrong with the traditional notation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The most glaring problem is that a lot of the opcodes do not by themselves
+<p>The most glaring problem is that a lot of the mnemonics do not by themselves
 define which machine language instruction they code for. Put differently, the
-traditional notation violates the separation of opcode and operand: To
-figure out which instruction is meant, the operand must be analyzed as well.</p>
+traditional notation violates the separation of opcode and operand: To figure
+out which instruction is meant, the operand must be analyzed as well.</p>
 </div>
 <div class="paragraph">
-<p>Take <code>LDA</code>, an opcode that on the 65816 can refer to any one of these 15 modes:</p>
+<p>Take <code>LDA</code>, am mnemonic that on the 65816 can refer to any one of these 15 modes
+with their separate opcodes:</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -531,11 +532,11 @@ decorated with an assortment of special characters to define the opcode. Also,
 the numbers themselves must have a fixed number of digits to distinguish
 between, say, Absolute and Zero Page modes. The final proof that the operand is
 not just a parameter, but mixed up with the mnemonic, is that the X is added to
-the mnemonic, not the opcode, in the indexed modes.</p>
+the end of the mnemonic, not of the opcode, in the indexed modes.</p>
 </div>
 <div class="paragraph">
-<p>Still, with the 6502, this system is still manageable, and gets by with little
-more than a comma, the hash sign, and round brackets:</p>
+<p>With the 6502, this system is still very much manageable, and gets by with
+little more than a comma, the hash sign, and round brackets:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -567,7 +568,7 @@ more than a comma, the hash sign, and round brackets:</p>
 </table>
 <div class="paragraph">
 <p>If the 6502/65c02 were the only processors in the family, a new notation would
-hardly be needed. However, the additional instructions of the 65816 forced the
+not be needed. However, the additional instructions of the 65816 forced the
 system to adopt even more special characters. Also, since the modes cannot
 always be reliably determined from the mnemonic and operand combinations, even
 more special characters are required: <code>&lt;</code> is used to force direct page
@@ -605,15 +606,15 @@ ten-finger typists.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_what_is_em_really_em_wrong_with_the_traditional_notation_the_65816">What is <em>really</em> wrong with the traditional notation: The 65816</h2>
+<h2 id="_what_is_em_really_em_wrong_with_the_traditional_notation">What is <em>really</em> wrong with the traditional notation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Where the traditional syntax falls apart is with the new instructions such as
-<code>PEA</code> and <code>BRL</code>. <code>PEA</code> is one offender: Formally called "Push Effective Absolute
-Address" with the syntax <code>PEA $2222</code>, what it actually does is push the operand
-on the stack, not an absolute address as the formatting would suggest. Both the
-instruction name and format are misleading. Even the standard reference <a href="#ENL">[ENL]</a>
-states:</p>
+<p>Where the traditional syntax falls apart is with the new instructions of the
+65816 such as <code>PEA</code> and <code>BRL</code>. <code>PEA</code> is one offender: Formally called "Push
+Effective Absolute Address" with the syntax <code>PEA $2222</code>, what it actually does
+is push the operand on the stack, not an absolute address as the formatting
+would suggest. Both the instruction name and format are misleading. Even the
+standard reference states: <a href="#ENL">[ENL]</a></p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -646,7 +647,7 @@ try to make the more advanced processor easier to use with choice of
 mnemonics.</p>
 </div>
 <div class="paragraph">
-<p>With that in mind, the new syntax has the following features:</p>
+<p>With that in mind, the new syntax presented here has the following features:</p>
 </div>
 <div class="paragraph">
 <p><strong>There is a one-to-one relationship between mnemonics and machine code
@@ -654,11 +655,6 @@ instructions.</strong> Put differently, every mnemonic represents one and only o
 opcode, not up to 15. No analysis of the operand is required to figure out what
 instruction we are dealing with. Besides removing the requirement for various
 special characters, this makes building assemblers and disassemblers far easier.</p>
-</div>
-<div class="paragraph">
-<p><strong>All mnemonics are lower case.</strong> This way, <code>LDA</code> becomes <code>lda</code>. This is a
-simple way to improve coding speed immediately, especially for ten-finger
-typists.</p>
 </div>
 <div class="paragraph">
 <p><strong>We keep (almost) all of the original mnemonics as the three-character "stems"
@@ -669,10 +665,10 @@ mode on the 65816, this would make it too confusing. So we stick with <code>sta<
 </div>
 <div class="paragraph">
 <p><strong>The addressing modes are coded as part of the opcode body, separated by a dot
-from the stem.</strong> This is the opcode&#8217;s "suffix". The tail suffix signals
-whether the instruction is direct page, immediate, X indexed etc. For example,
-<code>LDA $10</code> becomes <code>lda.z 10</code> and <code>STA $1000,X</code> becomes <code>sta.x $1000</code> under the new
-system. We go into detail below.</p>
+from the stem.</strong> This is the opcode&#8217;s "suffix". The suffix shows if the
+instruction is direct page, immediate, X indexed etc. For example, <code>LDA $10</code>
+becomes <code>lda.d 10</code> (with <code>d</code> for "direct page") and <code>STA $1000,X</code> becomes <code>sta.x
+$1000</code> under the new system.  We go into detail below.</p>
 </div>
 <div class="paragraph">
 <p><strong>The operand is pure parameter and not used for identifying the instruction.</strong> This
@@ -680,16 +676,18 @@ simplifies the writing of assemblers, because</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        lda.z 0
-        lda.z 00
-        lda.z 0000
-        lda.z 000000
-        lda.z 00:0000           ; syntactic sugar</pre>
+<pre>        lda 0
+        lda 00
+        lda 0000
+        lda 000000
+        lda 00:0000           ; with syntactic sugar</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>all result in the same machine language instruction, loading the accumulator
-with the content of zero page address 00.</p>
+with the content of address 0000 (Absolute Mode). The class of bugs in the old
+system where <code>LDA 00</code> (Direct/Zero Page) and <code>LDA 0000</code> (Absolute) were confused
+is elimiated.</p>
 </div>
 <div class="paragraph">
 <p><strong>Some 65816 instructions are reorganized and renamed.</strong> For example, <code>BRL</code> is a
@@ -697,6 +695,10 @@ with the content of zero page address 00.</p>
 the long version. <code>PEA</code>, <code>PEI</code>, and <code>PER</code> are folded into one family with the
 common stem <code>phe</code> (PusH Effective address) and different suffixes. These new
 versions are discussed below.</p>
+</div>
+<div class="paragraph">
+<p><strong>All mnemonics are lower case.</strong> This way, <code>LDA</code> becomes <code>lda</code>. This is a
+simple way to improve coding speed, especially for ten-finger typists.</p>
 </div>
 </div>
 </div>
@@ -797,42 +799,42 @@ disruption (e.g. <code>lda.</mark> 33</code>).</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct page (DP)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $10</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.z $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.d $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct page X indexed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $10,X</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.zx $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.dx $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct page Y indexed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDX $10,Y</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ldx.zy $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ldx.dy $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct page indirect</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA ($10)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.zi $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.di $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">DP indirect X indexed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA ($10,X)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.zxi $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.dxi $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">DP indirect Y indexed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA ($10),Y</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.ziy $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.diy $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">DP indirect long</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA [$10]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.zil $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.dil $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">DP indirect long Y index</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA [$10],Y</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.zily $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.dily $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Relative</p></td>
@@ -869,7 +871,7 @@ disruption (e.g. <code>lda.</mark> 33</code>).</p>
 <div class="listingblock">
 <div class="content">
 <pre>        LDA #00                 lda.# 00
-        STA $10                 sta.z $10
+        STA $10                 sta.d $10
         TAX                     tax
 LOOP1:                  loop1:
         STA $1000,x             sta.x $1000
@@ -972,8 +974,11 @@ present in three-letter operands.</p>
 such as <code>lda.dily</code>&#8201;&#8212;&#8201;in this case, the suffix wags the stem, so to speak.</p>
 </div>
 <div class="paragraph">
-<p>Using <code>z</code> for direct mode on the 65816 is
-6502/65c02 makes using code from one on processor on the other harder.</p>
+<p>The name change from "Zero Page" on the 6502/65c02 to "Direct Page" on the 65816
+can be reflected in the suffix. We&#8217;ve used the <code>d</code> form here because
+realistically, this new notation will be used on the 65816 if anywhere. An
+assembler that translates SAN for all MPU models should recognized <code>lda.z</code> as
+well as <code>lda.d</code> where appropriate.</p>
 </div>
 </div>
 </div>
@@ -993,8 +998,9 @@ common marker for hexadecimal numbers with modern computer languages. It should
 be accepted by assemblers for SAN.</p>
 </div>
 <div class="paragraph">
-<p>As syntactic sugar, a colon <code>:</code> should be legal in 24 bit numbers to separate
-the bank byte from the rest of the address (e.g. <code>$10:0000</code>)</p>
+<p>As syntactic sugar, a colon <code>:</code> and dot <code>.</code> should be legal in 24 bit numbers to
+separate the bank byte from the rest of the address (e.g. <code>$10:0000</code>) or for
+binary numbers (e.g. <code>%1100.1000</code>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -1016,8 +1022,8 @@ the bank byte from the rest of the address (e.g. <code>$10:0000</code>)</p>
 </td>
 <td class="content">
 Since <code>(</code> and <code>)</code> are not used for the mnemonics any more, this opens the door
-to using them for Forth-like in-line comments. However, there seems to be little
-use for them in Assembler.
+to using them for Forth-like in-line comments. This can be useful on Forth
+systems themselves.
 </td>
 </tr>
 </table>
@@ -1230,7 +1236,7 @@ David Eyes and Ron Lichty</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-11-10 10:15:23 CET
+Last updated 2018-11-14 23:39:25 CET
 </div>
 </div>
 </body>
