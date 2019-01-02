@@ -427,8 +427,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Scot W. Stevenson</span><br>
 <span id="email" class="email"><a href="mailto:scot.stevenson@gmail.com">scot.stevenson@gmail.com</a></span><br>
-<span id="revnumber">version ALPHA,</span>
-<span id="revdate">10. Nov 2018</span>
+<span id="revnumber">version BETA,</span>
+<span id="revdate">02. Jan 2019</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -440,11 +440,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_complete_list_of_addressing_modes">Complete list of addressing modes</a>
 <ul class="sectlevel2">
 <li><a href="#_code_example">Code example</a></li>
+<li><a href="#_zero_page_6502_65c02_vs_direct_page_65816">Zero Page (6502/65c02) vs Direct Page (65816)</a></li>
 </ul>
 </li>
 <li><a href="#_modified_mnemonics_for_the_65816">Modified mnemonics for the 65816</a></li>
 <li><a href="#_disadvantages_of_the_new_notation">Disadvantages of the new notation</a></li>
-<li><a href="#_suggested_conventions_for_assemblers">Suggested conventions for assemblers</a>
+<li><a href="#_conventions_for_assemblers">Conventions for assemblers</a>
 <ul class="sectlevel2">
 <li><a href="#_number_formatting">Number formatting</a></li>
 <li><a href="#_directives">Directives</a></li>
@@ -465,6 +466,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_earlier_versions">Earlier versions</a></li>
 <li><a href="#_postfix_variants_forth">Postfix variants (Forth)</a></li>
+<li><a href="#_further_information_and_help">Further information and help</a></li>
 </ul>
 </li>
 <li><a href="#_references_and_further_reading">References and further reading</a></li>
@@ -506,11 +508,12 @@ tries to make the code easier to read, easier to process and even faster to type
 <p>The most glaring problem is that a lot of the mnemonics do not by themselves
 define which machine language instruction they code for. Put differently, the
 traditional notation violates the separation of opcode and operand: To figure
-out which instruction is meant, the operand must be analyzed as well.</p>
+out which instruction the mnemonic refers to, the operand must be analyzed as
+well.</p>
 </div>
 <div class="paragraph">
-<p>Take <code>LDA</code>, am mnemonic that on the 65816 can refer to any one of these 15 modes
-with their separate opcodes:</p>
+<p>Take <code>LDA</code>, which on the 65816 can refer to any one of these 15 modes with their
+separate opcodes:</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -526,13 +529,13 @@ relative indirect Y indexed</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The fixation with three-character mnemonics means that the operand has to
-pick up the slack. Instead of consisting just of a number, they must be
-decorated with an assortment of special characters to define the opcode. Also,
-the numbers themselves must have a fixed number of digits to distinguish
-between, say, Absolute and Zero Page modes. The final proof that the operand is
-not just a parameter, but mixed up with the mnemonic, is that the X is added to
-the end of the mnemonic, not of the opcode, in the indexed modes.</p>
+<p>The fixation with three-character mnemonics means that the operand has to pick
+up the slack. Instead of consisting of just a number, they must be decorated
+with an assortment of special characters. Also, the numbers themselves must have
+a fixed number of digits to distinguish between, say, Absolute and Zero Page
+modes. The final proof that the operand is not just a parameter, but mixed up
+with the mnemonic, is that the X is added to the end of the mnemonic, not of the
+opcode, in the indexed modes.</p>
 </div>
 <div class="paragraph">
 <p>With the 6502, this system is still very much manageable, and gets by with
@@ -568,13 +571,15 @@ little more than a comma, the hash sign, and round brackets:</p>
 </table>
 <div class="paragraph">
 <p>If the 6502/65c02 were the only processors in the family, a new notation would
-not be needed. However, the additional instructions of the 65816 forced the
-system to adopt even more special characters. Also, since the modes cannot
-always be reliably determined from the mnemonic and operand combinations, even
-more special characters are required: <code>&lt;</code> is used to force direct page
-addressing, <code>!</code> for absolute, <code>&gt;</code> for long addressing mode, <code>[</code> and <code>]</code> for long
-indirect modes.  Traditional 65816 assembler notation can end up looking like
-something from a bash shell script or a regex instruction.</p>
+not be needed.</p>
+</div>
+<div class="paragraph">
+<p>However, the additional instructions of the 65816 forced the system to adopt
+even more special characters, since the modes cannot always be reliably
+determined from the mnemonic and operand combinations : <code>&lt;</code> is used to force
+Direct Page addressing, <code>!</code> is used for absolute, <code>&gt;</code> for long addressing mode,
+<code>[</code> and <code>]</code> for long indirect modes. Traditional 65816 assembler notation can
+end up looking like something from a bash shell script or a regex instruction.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -597,11 +602,11 @@ something from a bash shell script or a regex instruction.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The long list of special characters not only makes the code hard to read, but
-also hard to type, especially on non-American keyboards. For instance, on German
-keyboards, the <code>[</code> and <code>]</code> have to be entered with a special ALT key. Combined with
-the tradition of using upper case letters, entering code is slow, especially for
-ten-finger typists.</p>
+<p>The large number of special characters not only makes the code harder to read,
+but also harder to type, especially on non-American keyboards. For instance, on
+German keyboards, the <code>[</code> and <code>]</code> have to be entered with the ALT key. Combined
+with the tradition of using upper case letters, entering code is slow,
+especially for ten-finger typists.</p>
 </div>
 </div>
 </div>
@@ -610,11 +615,11 @@ ten-finger typists.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Where the traditional syntax falls apart is with the new instructions of the
-65816 such as <code>PEA</code> and <code>BRL</code>. <code>PEA</code> is one offender: Formally called "Push
-Effective Absolute Address" with the syntax <code>PEA $2222</code>, what it actually does
-is push the operand on the stack, not an absolute address as the formatting
-would suggest. Both the instruction name and format are misleading. Even the
-standard reference states: <a href="#ENL">[ENL]</a></p>
+65816 such as <code>PEA</code> and <code>BRL</code>. <code>PEA</code> is probably the worst offender: Formally
+called "Push Effective Absolute Address" with the syntax <code>PEA $2222</code>, what it
+actually does is push the operand on the stack, not to an absolute address as
+the name the formatting would suggest. Both the instruction name and format are
+misleading. Even the standard reference states: <a href="#ENL">[ENL]</a></p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -637,38 +642,38 @@ instruction is given its own mnemonic, <code>BRL</code>.</p>
 <h2 id="_constructing_an_improved_syntax">Constructing an improved syntax</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When setting out to get rid of these problems, we have to remember that any new
-system must remain easy to read for coders who see it for the first time, even
-if they never use it themselves. Because of this, we cannot stray too far from
-the traditional syntax. This is especially true for the original 6502 mnemonics
-that have been in widespread use for decades. We have a bit more leeway with the
-new 65816 instructions, because the MPU is not so well known. In fact, we can
-try to make the more advanced processor easier to use with choice of
-mnemonics.</p>
+<p>Any new system must remain easy to read for coders who see it for the first
+time, even if they never use it themselves. Because of this, we cannot stray too
+far from the traditional syntax. This is especially true for the original 6502
+mnemonics that have been in widespread use for decades. We have a bit more
+leeway with the new 65816 instructions because the MPU is not so well known. In
+fact, we can try to make the more advanced processor easier to use with a better
+choice of mnemonics.</p>
 </div>
 <div class="paragraph">
 <p>With that in mind, the new syntax presented here has the following features:</p>
 </div>
 <div class="paragraph">
 <p><strong>There is a one-to-one relationship between mnemonics and machine code
-instructions.</strong> Put differently, every mnemonic represents one and only one
-opcode, not up to 15. No analysis of the operand is required to figure out what
-instruction we are dealing with. Besides removing the requirement for various
-special characters, this makes building assemblers and disassemblers far easier.</p>
+instructions.</strong> Every mnemonic represents one and only one opcode, not up to 15.
+No analysis of the operand is required to figure out what instruction we are
+dealing with. Besides removing the requirement for various special characters,
+this makes building assemblers and disassemblers far easier.</p>
 </div>
 <div class="paragraph">
 <p><strong>We keep (almost) all of the original mnemonics as the three-character "stems"
 of the new opcodes.</strong> This allows the code to be read by those programmers who
 have never even heard the name of the new syntax. So even though you could argue
 that <code>STA</code> should be named <code>stc</code> for a 16-bit accumulator when running in native
-mode on the 65816, this would make it too confusing. So we stick with <code>sta</code>.</p>
+mode on the 65816, this would be too big of break with the traditional notation.
+So we stick with <code>sta</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>The addressing modes are coded as part of the opcode body, separated by a dot
 from the stem.</strong> This is the opcode&#8217;s "suffix". The suffix shows if the
-instruction is direct page, immediate, X indexed etc. For example, <code>LDA $10</code>
+instruction is direct page, immediate, X indexed etc. This way, <code>LDA $10</code>
 becomes <code>lda.d 10</code> (with <code>d</code> for "direct page") and <code>STA $1000,X</code> becomes <code>sta.x
-$1000</code> under the new system.  We go into detail below.</p>
+$1000</code>. We go into more detail below.</p>
 </div>
 <div class="paragraph">
 <p><strong>The operand is pure parameter and not used for identifying the instruction.</strong> This
@@ -687,7 +692,7 @@ simplifies the writing of assemblers, because</p>
 <p>all result in the same machine language instruction, loading the accumulator
 with the content of address 0000 (Absolute Mode). The class of bugs in the old
 system where <code>LDA 00</code> (Direct/Zero Page) and <code>LDA 0000</code> (Absolute) were confused
-is elimiated.</p>
+and nobody really knew what <code>LDA 000</code> was supposed to be is eliminated.</p>
 </div>
 <div class="paragraph">
 <p><strong>Some 65816 instructions are reorganized and renamed.</strong> For example, <code>BRL</code> is a
@@ -719,9 +724,11 @@ in traditional notation. This way, <code>LDA ($10,X)</code> becomes <code>lda.dx
 ($10),Y</code> becomes <code>lda.diy</code>.</p>
 </div>
 <div class="paragraph">
-<p>We keep the hash symbol (<code><mark></code>) for Immediate mode because though it is a special
-character, at this point it is too deeply ingrained to change without major
-disruption (e.g. <code>lda.</mark> 33</code>).</p>
+<p>We keep the hash symbol (<code><mark></code>) for Immediate mode on the 6502 and 65c02 because
+though it is a special character, at this point it is too deeply ingrained to
+change without major disruption (e.g. <code>lda.</mark> 33</code>). On the 65816, we can
+substitute <code>lda.8</code> and <code>lda.16</code> etc. to distinguish between the different
+register modes.</p>
 </div>
 <div class="paragraph">
 <p>These and other variants give us the following complete list of modes (for the
@@ -757,9 +764,19 @@ disruption (e.g. <code>lda.</mark> 33</code>).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>inc.a</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate (6502, 65c02)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA #$00</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.# $00</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate 8-bit (65816)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA #$00</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.8 $00</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate 16-bit (65816)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA #$00</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.16 $00</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Absolute X indexed</p></td>
@@ -797,9 +814,14 @@ disruption (e.g. <code>lda.</mark> 33</code>).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>jmp.il $1000</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Direct page (DP)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direct page (65816)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $10</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.d $10</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero page (6502, 65c02)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.z $10</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Direct page X indexed</p></td>
@@ -884,6 +906,17 @@ LOOP1:                  loop1:
 readable for people not familiar with the new syntax.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_zero_page_6502_65c02_vs_direct_page_65816">Zero Page (6502/65c02) vs Direct Page (65816)</h3>
+<div class="paragraph">
+<p>On the 65816, the Zero Page has been renamed to Direct Page. This makes picking
+a suffix for these modes difficult. Real-world use suggests that separate
+mnemonics should be used for both machines - <code>lda.z 00</code> for the 6502/65c02,
+<code>lda.d 00</code> for the 65816 - while using assemblers that are tolerant of typos
+(but do produce a warning). Again, in most cases the traditional syntax for the
+6502/65c02 is perfectly fine.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -891,7 +924,8 @@ readable for people not familiar with the new syntax.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The changes to the 65816 mnemonics mainly involve defining a common stem and
-adding suffixes instead of creating new mnemonics as in the traditional variant.</p>
+adding suffixes instead of using various different mnemonics like the
+traditional variant.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -916,6 +950,11 @@ adding suffixes instead of creating new mnemonics as in the traditional variant.
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jump subroutine long</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RTL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rts.l</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Return subroutine long</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PEA</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>phe.#</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Push effective absolute address</p></td>
@@ -930,11 +969,6 @@ adding suffixes instead of creating new mnemonics as in the traditional variant.
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>phe.r</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Push effective relative address</p></td>
 </tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RTL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rts.l</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Return subroutine long</p></td>
-</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -948,13 +982,14 @@ the instruction better than the misleading "indirect" description.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Note we have not added suffixes for new suffixes' sake. The relative
-branches could have received a <code>r</code> tail in keeping with <code>phe.r</code>, but the short
-form is more familiar, and there is no other addressing mode for the branch
-instructions anyway. Also, a more complete systematic revision of the opcodes
-might also suggest <code>CMP</code> should be changed into <code>cpa</code> in keeping with <code>cpx</code> and
-<code>cpy</code>. However, <code>cmp</code> is the far more familiar form. The same holds true for
-<code>INC A</code> vs <code>INA</code>, which is why we stick with <code>inc.a</code>.
+Suffixes have not been added for their own sake. The relative branches
+could have received a <code>r</code> tail in keeping with <code>phe.r</code>, but the short form is
+more familiar, and there is no other addressing mode for the branch instructions
+anyway (except for the long variant on the 65816). Also, a more complete
+systematic revision of the opcodes might also suggest <code>CMP</code> should be changed
+into <code>cpa</code> in keeping with <code>cpx</code> and <code>cpy</code>.  However, <code>cmp</code> is the far more
+familiar form. The same holds true for <code>INC A</code> vs <code>INA</code>, which is why we stick
+with <code>inc.a</code>.
 </td>
 </tr>
 </table>
@@ -973,21 +1008,13 @@ present in three-letter operands.</p>
 <p>Adding a tail expands some of the lesser-used mnemonics to a ridiculous length,
 such as <code>lda.dily</code>&#8201;&#8212;&#8201;in this case, the suffix wags the stem, so to speak.</p>
 </div>
-<div class="paragraph">
-<p>The name change from "Zero Page" on the 6502/65c02 to "Direct Page" on the 65816
-can be reflected in the suffix. We&#8217;ve used the <code>d</code> form here because
-realistically, this new notation will be used on the 65816 if anywhere. An
-assembler that translates SAN for all MPU models should recognized <code>lda.z</code> as
-well as <code>lda.d</code> where appropriate.</p>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_suggested_conventions_for_assemblers">Suggested conventions for assemblers</h2>
+<h2 id="_conventions_for_assemblers">Conventions for assemblers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>While we&#8217;re at it, we might as well define a set of conventions for assemblers.
-Realistically, these are notes for myself.</p>
+<p>These are merely suggestions</p>
 </div>
 <div class="sect2">
 <h3 id="_number_formatting">Number formatting</h3>
@@ -1022,11 +1049,19 @@ binary numbers (e.g. <code>%1100.1000</code>).</p>
 </td>
 <td class="content">
 Since <code>(</code> and <code>)</code> are not used for the mnemonics any more, this opens the door
-to using them for Forth-like in-line comments. This can be useful on Forth
-systems themselves.
+to using them for Forth-like in-line comments:
 </td>
 </tr>
 </table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        .byte 01, ( partridge ) 02, ( doves ) 03, ( hens ) 04 (  birds )
+        .byte 05, ( rings ) 06, ( geese ) 07, ( swans ), 08 ( maids )</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, this would mean that they can&#8217;t be used in math functions.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1035,6 +1070,16 @@ systems themselves.
 <p>Indentation is handled by spaces, not tabs, with eight spaces per indentation
 level. Labels and high-level comments start at the beginning of the line,
 directives on indentation in, and instructions two indentations in.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>; high-level comment
+label:
+        ; secondary comment
+        .directive
+
+                lda.# 10 ; in line-comment</pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1057,9 +1102,9 @@ run on a 6502/65c02/65816 system itself. Example: <code>[ 2 3 + ]</code></p>
 <div class="sect2">
 <h3 id="_assemblers_for_san">Assemblers for SAN</h3>
 <div class="paragraph">
-<p>The disassembler of Tali Forth 2 for the 65c02
-(<a href="https://github.com/scotws/TaliForth2" class="bare">https://github.com/scotws/TaliForth2</a>) outputs SAN. An assembler is being worked
-on that will accept SAN notation.</p>
+<p>The disassembler and assembler of Tali Forth 2 for the 65c02
+(<a href="https://github.com/scotws/TaliForth2" class="bare">https://github.com/scotws/TaliForth2</a>) use SAN. The documentation includes a
+short introduction.</p>
 </div>
 <div class="sect3">
 <h4 id="_assemblers_for_tan">Assemblers for TAN</h4>
@@ -1085,8 +1130,8 @@ code is almost identical:</p>
 <p>The last two use postfix notation.</p>
 </div>
 <div class="paragraph">
-<p>Liara Forth for the 65816 was written in Typists' Assembler Notation (TAN), a
-proto-version of SAN (<a href="https://github.com/scotws/LiaraForth" class="bare">https://github.com/scotws/LiaraForth</a>).</p>
+<p>Liara Forth for the 65816 was written in Typists' Assembler Notation (TAN)
+(<a href="https://github.com/scotws/LiaraForth" class="bare">https://github.com/scotws/LiaraForth</a>).</p>
 </div>
 </div>
 </div>
@@ -1192,9 +1237,11 @@ special directives to the unresolved labels.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>In this version <code>&#8594;</code> is used as a label directive.
-=== Further information and help</p>
+<p>In this version <code>&#8594;</code> is used as a label directive.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_further_information_and_help">Further information and help</h3>
 <div class="paragraph">
 <p>For all things to do with the 6502/65c02/65816, see <a href="http://www.6502.org/" class="bare">http://www.6502.org/</a> Very
 nice, very helpful people.</p>
@@ -1206,7 +1253,7 @@ nice, very helpful people.</p>
 <h2 id="_references_and_further_reading">References and further reading</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a id="ENL"></a>[ENL] <em>Programming the 65816. Including the 6502, 65C02 and 65802</em>,
+<p><a id="END"></a>[END] <em>Programming the 65816. Including the 6502, 65C02 and 65802</em>,
 David Eyes and Ron Lichty</p>
 </div>
 <div class="paragraph">
@@ -1235,8 +1282,8 @@ David Eyes and Ron Lichty</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version ALPHA<br>
-Last updated 2018-11-14 23:39:25 CET
+Version BETA<br>
+Last updated 2019-01-02 21:07:48 CET
 </div>
 </div>
 </body>

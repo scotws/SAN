@@ -3,8 +3,8 @@
 :author: Scot W. Stevenson
 :email: scot.stevenson@gmail.com
 :keywords: 6502, 65c02, 65816, ISA, assembler, programming, 8-bit, vintage, retro
-:revnumber: ALPHA
-:revdate: 10. Nov 2018
+:revnumber: BETA
+:revdate: 02. Jan 2019
 :showtitle:
 :icons: font
 :toc: left
@@ -39,10 +39,11 @@ tries to make the code easier to read, easier to process and even faster to type
 The most glaring problem is that a lot of the mnemonics do not by themselves
 define which machine language instruction they code for. Put differently, the
 traditional notation violates the separation of opcode and operand: To figure
-out which instruction is meant, the operand must be analyzed as well. 
+out which instruction the mnemonic refers to, the operand must be analyzed as
+well. 
 
-Take `LDA`, am mnemonic that on the 65816 can refer to any one of these 15 modes
-with their separate opcodes:
+Take `LDA`, which on the 65816 can refer to any one of these 15 modes with their
+separate opcodes:
 
 ====
         immediate, absolute, absolute long, direct page, direct page indirect, direct
@@ -52,13 +53,13 @@ with their separate opcodes:
         relative indirect Y indexed
 ====
 
-The fixation with three-character mnemonics means that the operand has to
-pick up the slack. Instead of consisting just of a number, they must be
-decorated with an assortment of special characters to define the opcode. Also,
-the numbers themselves must have a fixed number of digits to distinguish
-between, say, Absolute and Zero Page modes. The final proof that the operand is
-not just a parameter, but mixed up with the mnemonic, is that the X is added to
-the end of the mnemonic, not of the opcode, in the indexed modes.
+The fixation with three-character mnemonics means that the operand has to pick
+up the slack. Instead of consisting of just a number, they must be decorated
+with an assortment of special characters. Also, the numbers themselves must have
+a fixed number of digits to distinguish between, say, Absolute and Zero Page
+modes. The final proof that the operand is not just a parameter, but mixed up
+with the mnemonic, is that the X is added to the end of the mnemonic, not of the
+opcode, in the indexed modes.
 
 With the 6502, this system is still very much manageable, and gets by with
 little more than a comma, the hash sign, and round brackets:
@@ -74,13 +75,14 @@ little more than a comma, the hash sign, and round brackets:
 |===
 
 If the 6502/65c02 were the only processors in the family, a new notation would
-not be needed. However, the additional instructions of the 65816 forced the
-system to adopt even more special characters. Also, since the modes cannot
-always be reliably determined from the mnemonic and operand combinations, even
-more special characters are required: `<` is used to force direct page
-addressing, `!` for absolute, `>` for long addressing mode, `[` and `]` for long
-indirect modes.  Traditional 65816 assembler notation can end up looking like
-something from a bash shell script or a regex instruction.
+not be needed. 
+
+However, the additional instructions of the 65816 forced the system to adopt
+even more special characters, since the modes cannot always be reliably
+determined from the mnemonic and operand combinations : `<` is used to force
+Direct Page addressing, `!` is used for absolute, `>` for long addressing mode,
+`[` and `]` for long indirect modes. Traditional 65816 assembler notation can
+end up looking like something from a bash shell script or a regex instruction.
 
 |===
 
@@ -89,22 +91,22 @@ something from a bash shell script or a regex instruction.
 |`LDA !12000`  | absolute (forced), decimal address
 |===
 
-The long list of special characters not only makes the code hard to read, but
-also hard to type, especially on non-American keyboards. For instance, on German
-keyboards, the `[` and `]` have to be entered with a special ALT key. Combined with
-the tradition of using upper case letters, entering code is slow, especially for
-ten-finger typists. 
+The large number of special characters not only makes the code harder to read,
+but also harder to type, especially on non-American keyboards. For instance, on
+German keyboards, the `[` and `]` have to be entered with the ALT key. Combined
+with the tradition of using upper case letters, entering code is slow,
+especially for ten-finger typists. 
 
 
 // --------------------------------------------------------
 == What is _really_ wrong with the traditional notation
 
 Where the traditional syntax falls apart is with the new instructions of the
-65816 such as `PEA` and `BRL`. `PEA` is one offender: Formally called "Push
-Effective Absolute Address" with the syntax `PEA $2222`, what it actually does
-is push the operand on the stack, not an absolute address as the formatting
-would suggest. Both the instruction name and format are misleading. Even the
-standard reference states: <<ENL>> 
+65816 such as `PEA` and `BRL`. `PEA` is probably the worst offender: Formally
+called "Push Effective Absolute Address" with the syntax `PEA $2222`, what it
+actually does is push the operand on the stack, not to an absolute address as
+the name the formatting would suggest. Both the instruction name and format are
+misleading. Even the standard reference states: <<ENL>> 
 
 [quote]
 The assembler syntax is that of the absolute addressing mode, that is, a label
@@ -118,37 +120,36 @@ Whereas the difference between "short" and "long" forms for `LDA` is signaled by
 the length of the operand as shown above, the "long" form of the branch
 instruction is given its own mnemonic, `BRL`.
 
-// --------------------------------------------------------
 == Constructing an improved syntax
 
-When setting out to get rid of these problems, we have to remember that any new
-system must remain easy to read for coders who see it for the first time, even
-if they never use it themselves. Because of this, we cannot stray too far from
-the traditional syntax. This is especially true for the original 6502 mnemonics
-that have been in widespread use for decades. We have a bit more leeway with the
-new 65816 instructions, because the MPU is not so well known. In fact, we can
-try to make the more advanced processor easier to use with choice of
-mnemonics.
+Any new system must remain easy to read for coders who see it for the first
+time, even if they never use it themselves. Because of this, we cannot stray too
+far from the traditional syntax. This is especially true for the original 6502
+mnemonics that have been in widespread use for decades. We have a bit more
+leeway with the new 65816 instructions because the MPU is not so well known. In
+fact, we can try to make the more advanced processor easier to use with a better
+choice of mnemonics.
 
 With that in mind, the new syntax presented here has the following features:
 
 **There is a one-to-one relationship between mnemonics and machine code
-instructions.** Put differently, every mnemonic represents one and only one
-opcode, not up to 15. No analysis of the operand is required to figure out what
-instruction we are dealing with. Besides removing the requirement for various
-special characters, this makes building assemblers and disassemblers far easier. 
+instructions.** Every mnemonic represents one and only one opcode, not up to 15.
+No analysis of the operand is required to figure out what instruction we are
+dealing with. Besides removing the requirement for various special characters,
+this makes building assemblers and disassemblers far easier. 
 
 **We keep (almost) all of the original mnemonics as the three-character "stems"
 of the new opcodes.** This allows the code to be read by those programmers who
 have never even heard the name of the new syntax. So even though you could argue
 that `STA` should be named `stc` for a 16-bit accumulator when running in native
-mode on the 65816, this would make it too confusing. So we stick with `sta`.
+mode on the 65816, this would be too big of break with the traditional notation.
+So we stick with `sta`.
 
 **The addressing modes are coded as part of the opcode body, separated by a dot
 from the stem.** This is the opcode's "suffix". The suffix shows if the
-instruction is direct page, immediate, X indexed etc. For example, `LDA $10`
+instruction is direct page, immediate, X indexed etc. This way, `LDA $10`
 becomes `lda.d 10` (with `d` for "direct page") and `STA $1000,X` becomes `sta.x
-$1000` under the new system.  We go into detail below.
+$1000`. We go into more detail below.
 
 **The operand is pure parameter and not used for identifying the instruction.** This
 simplifies the writing of assemblers, because 
@@ -164,7 +165,7 @@ simplifies the writing of assemblers, because
 all result in the same machine language instruction, loading the accumulator
 with the content of address 0000 (Absolute Mode). The class of bugs in the old
 system where `LDA 00` (Direct/Zero Page) and `LDA 0000` (Absolute) were confused
-is elimiated. 
+and nobody really knew what `LDA 000` was supposed to be is eliminated. 
 
 **Some 65816 instructions are reorganized and renamed.** For example, `BRL` is a
 "long" form of `BRA`, so we keep `bra` for the short "base" form and `bra.l` for
@@ -175,7 +176,6 @@ versions are discussed below.
 **All mnemonics are lower case.** This way, `LDA` becomes `lda`. This is a
 simple way to improve coding speed, especially for ten-finger typists.
 
-// --------------------------------------------------------
 == Complete list of addressing modes 
 
 The mnemonic suffixes follow the names of the addressing modes. The "naked" stem
@@ -189,9 +189,11 @@ Indirect modes are marked with an `i` that is placed where the bracket would be
 in traditional notation. This way, `LDA ($10,X)` becomes `lda.dxi` and `LDA
 ($10),Y` becomes `lda.diy`. 
 
-We keep the hash symbol (`#`) for Immediate mode because though it is a special
-character, at this point it is too deeply ingrained to change without major
-disruption (e.g. `lda.# 33`).
+We keep the hash symbol (`#`) for Immediate mode on the 6502 and 65c02 because
+though it is a special character, at this point it is too deeply ingrained to
+change without major disruption (e.g. `lda.# 33`). On the 65816, we can
+substitute `lda.8` and `lda.16` etc. to distinguish between the different
+register modes. 
 
 These and other variants give us the following complete list of modes (for the
 65816):
@@ -202,7 +204,9 @@ These and other variants give us the following complete list of modes (for the
 |Implied                   |  `DEX`               |  `dex`
 |Absolute                  |  `LDA $1000`         |  `lda $1000`
 |Accumulator               |  `INC A`             |  `inc.a`
-|Immediate                 |  `LDA #$00`          |  `lda.# $00`
+|Immediate (6502, 65c02)   |  `LDA #$00`          |  `lda.# $00`
+|Immediate 8-bit (65816)   |  `LDA #$00`          |  `lda.8 $00`
+|Immediate 16-bit (65816)  |  `LDA #$00`          |  `lda.16 $00`
 |Absolute X indexed        |  `LDA $1000,X`       |  `lda.x $1000`
 |Absolute Y indexed        |  `LDA $1000,Y`       |  `lda.y $1000`
 |Absolute indirect         |  `JMP ($1000)`       |  `jmp.i $1000`
@@ -210,7 +214,8 @@ These and other variants give us the following complete list of modes (for the
 |Absolute long             |  `JMP $101000`       |  `jmp.l $101000`
 |Absolute long X indexed   |  `JMP $101000,X`     |  `jmp.lx $101000`
 |Absolute indirect long    |  `JMP [$1000]`       |  `jmp.il $1000`
-|Direct page (DP)          |  `LDA $10`           |  `lda.d $10`
+|Direct page (65816)       |  `LDA $10`           |  `lda.d $10`
+|Zero page (6502, 65c02)   |  `LDA $10`           |  `lda.z $10`
 |Direct page X indexed     |  `LDA $10,X`         |  `lda.dx $10`
 |Direct page Y indexed     |  `LDX $10,Y`         |  `ldx.dy $10`
 |Direct page indirect      |  `LDA ($10)`         |  `lda.di $10`
@@ -242,33 +247,43 @@ LOOP1:                  loop1:
 If the changes seem minor, remember this is intentional: The code must remain
 readable for people not familiar with the new syntax.
 
-// --------------------------------------------------------
+=== Zero Page (6502/65c02) vs Direct Page (65816)
+
+On the 65816, the Zero Page has been renamed to Direct Page. This makes picking
+a suffix for these modes difficult. Real-world use suggests that separate
+mnemonics should be used for both machines - `lda.z 00` for the 6502/65c02,
+`lda.d 00` for the 65816 - while using assemblers that are tolerant of typos
+(but do produce a warning). Again, in most cases the traditional syntax for the
+6502/65c02 is perfectly fine. 
+
 == Modified mnemonics for the 65816
 
 The changes to the 65816 mnemonics mainly involve defining a common stem and
-adding suffixes instead of creating new mnemonics as in the traditional variant.
+adding suffixes instead of using various different mnemonics like the
+traditional variant.
 
 |===
 
 |`BRL`  |  `bra.l`   |    Branch long
 |`JML`  |  `jmp.l`   |    Jump absolute long
 |`JSL`  |  `jsr.l`   |    Jump subroutine long
+|`RTL`  |  `rts.l`   |    Return subroutine long
 |`PEA`  |  `phe.#`   |    Push effective absolute address
 |`PEI`  |  `phe.d`   |    Push effective indirect address
 |`PER`  |  `phe.r`   |    Push effective relative address
-|`RTL`  |  `rts.l`   |    Return subroutine long
 |===
 
 The only really difficult one is `phe.d`, which reflects the actual workings of
 the instruction better than the misleading "indirect" description.
 
-NOTE: Note we have not added suffixes for new suffixes' sake. The relative
-branches could have received a `r` tail in keeping with `phe.r`, but the short
-form is more familiar, and there is no other addressing mode for the branch
-instructions anyway. Also, a more complete systematic revision of the opcodes
-might also suggest `CMP` should be changed into `cpa` in keeping with `cpx` and
-`cpy`. However, `cmp` is the far more familiar form. The same holds true for
-`INC A` vs `INA`, which is why we stick with `inc.a`.
+NOTE: Suffixes have not been added for their own sake. The relative branches
+could have received a `r` tail in keeping with `phe.r`, but the short form is
+more familiar, and there is no other addressing mode for the branch instructions
+anyway (except for the long variant on the 65816). Also, a more complete
+systematic revision of the opcodes might also suggest `CMP` should be changed
+into `cpa` in keeping with `cpx` and `cpy`.  However, `cmp` is the far more
+familiar form. The same holds true for `INC A` vs `INA`, which is why we stick
+with `inc.a`.
 
 // --------------------------------------------------------
 == Disadvantages of the new notation
@@ -280,17 +295,11 @@ present in three-letter operands.
 Adding a tail expands some of the lesser-used mnemonics to a ridiculous length,
 such as `lda.dily` -- in this case, the suffix wags the stem, so to speak. 
 
-The name change from "Zero Page" on the 6502/65c02 to "Direct Page" on the 65816
-can be reflected in the suffix. We've used the `d` form here because
-realistically, this new notation will be used on the 65816 if anywhere. An
-assembler that translates SAN for all MPU models should recognized `lda.z` as
-well as `lda.d` where appropriate.
-
 // --------------------------------------------------------
-== Suggested conventions for assemblers
+== Conventions for assemblers
 
-While we're at it, we might as well define a set of conventions for assemblers.
-Realistically, these are notes for myself. 
+These are merely suggestions
+
 
 === Number formatting
 
@@ -312,14 +321,29 @@ Directives should all start with a dot (`.`) and be the first word on the line.
 Comments begin with `;` on the line.
 
 NOTE: Since `(` and `)` are not used for the mnemonics any more, this opens the door
-to using them for Forth-like in-line comments. This can be useful on Forth
-systems themselves.
+to using them for Forth-like in-line comments: 
+
+----
+        .byte 01, ( partridge ) 02, ( doves ) 03, ( hens ) 04 (  birds )
+        .byte 05, ( rings ) 06, ( geese ) 07, ( swans ), 08 ( maids )
+----
+
+However, this would mean that they can't be used in math functions.
 
 === Indentation
 
 Indentation is handled by spaces, not tabs, with eight spaces per indentation
 level. Labels and high-level comments start at the beginning of the line,
 directives on indentation in, and instructions two indentations in.
+
+----
+; high-level comment
+label:
+        ; secondary comment
+        .directive
+
+                lda.# 10 ; in line-comment
+----
 
 === Postfix notation math
 
@@ -335,9 +359,9 @@ Unsurprisingly, there are currently few tools for SAN.
 
 === Assemblers for SAN
 
-The disassembler of Tali Forth 2 for the 65c02
-(https://github.com/scotws/TaliForth2) outputs SAN. An assembler is being worked
-on that will accept SAN notation.
+The disassembler and assembler of Tali Forth 2 for the 65c02
+(https://github.com/scotws/TaliForth2) use SAN. The documentation includes a
+short introduction.
 
 ==== Assemblers for TAN
 
@@ -351,8 +375,8 @@ code is almost identical:
 
 The last two use postfix notation.
 
-Liara Forth for the 65816 was written in Typists' Assembler Notation (TAN), a
-proto-version of SAN (https://github.com/scotws/LiaraForth). 
+Liara Forth for the 65816 was written in Typists' Assembler Notation (TAN)
+(https://github.com/scotws/LiaraForth). 
 
 === Editor plugins
 
@@ -427,6 +451,7 @@ There are four directives to use with forward references in single-pass postfix 
 |===
 
 In this version `->` is used as a label directive.
+
 === Further information and help
 
 For all things to do with the 6502/65c02/65816, see http://www.6502.org/ Very
@@ -435,7 +460,7 @@ nice, very helpful people.
 [bibliography]
 == References and further reading
 
-[[[ENL]]] _Programming the 65816. Including the 6502, 65C02 and 65802_, 
+[[[END]]] _Programming the 65816. Including the 6502, 65C02 and 65802_, 
 David Eyes and Ron Lichty 
 
 [[[SWS]]] "Typist's Assembler Notation. An Alternative Syntax for the 6502,
