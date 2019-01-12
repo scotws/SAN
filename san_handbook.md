@@ -123,7 +123,9 @@ The mnemonic suffixes follow the names of the addressing modes. The "naked" stem
 Indirect modes are marked with an `i` that is placed where the bracket would be in traditional notation. This way, `LDA ($10,X)` becomes `lda.dxi` and `LDA
 ($10),Y` becomes `lda.diy`.
 
-We keep the hash symbol (``) for Immediate mode on the 6502 and 65c02 because though it is a special character, at this point it is too deeply ingrained to change without major disruption (e.g. `lda.</emphasis> 33`). On the 65816, we can substitute `lda.8` and `lda.16` etc. to distinguish between the different register modes.
+We keep the hash symbol (`#`) for Immediate mode on the 6502 and 65c02 because though it is a special character, at this point it is too deeply ingrained to change without major disruption (e.g. `lda.# 33`).
+
+On the 65816, we move the hash to the suffix as well with `REP` and `SEP`, even though there are no other instructions in this family. Their SAN mnemonics are `rep.#` and `sep.#`. This leave the option open to expand these instructions with further modes in the future. Also on this MPU, we accept the suffixes `.8` and `.16` for `.#` in immediate mode - for instance, `lda.8` and `lda.16` instead of `lda.#`. This way, the assembler can compare what the programmer thinks the register size is with what it really turns out to be, a form of a built-in "assert".
 
 These and other variants give us the following complete list of modes (for the 65816):
 
@@ -157,7 +159,7 @@ These and other variants give us the following complete list of modes (for the 6
 <td><p><code>inc.a</code></p></td>
 </tr>
 <tr class="even">
-<td><p>Immediate (6502, 65c02)</p></td>
+<td><p>Immediate</p></td>
 <td><p><code>LDA #$00</code></p></td>
 <td><p><code>lda.# $00</code></p></td>
 </tr>
@@ -360,7 +362,7 @@ Adding a tail expands some of the lesser-used mnemonics to a ridiculous length, 
 
 # Conventions for assemblers
 
-These are merely suggestions
+These are merely suggestions.
 
 ## Number formatting
 

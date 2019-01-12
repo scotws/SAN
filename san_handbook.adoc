@@ -2,9 +2,9 @@
 :doctype: article
 :author: Scot W. Stevenson
 :email: scot.stevenson@gmail.com
-:keywords: 6502, 65c02, 65816, ISA, assembler, programming, 8-bit, vintage, retro
+:keywords: 6502, 65c02, 65816, ISA, assembler, programming, 8-bit, vintage, retro, WDC
 :revnumber: BETA
-:revdate: 02. Jan 2019
+:revdate: 12. Jan 2019
 :showtitle:
 :icons: font
 :toc: left
@@ -189,11 +189,18 @@ Indirect modes are marked with an `i` that is placed where the bracket would be
 in traditional notation. This way, `LDA ($10,X)` becomes `lda.dxi` and `LDA
 ($10),Y` becomes `lda.diy`. 
 
-We keep the hash symbol (`#`) for Immediate mode on the 6502 and 65c02 because
+We keep the hash symbol (`\#`) for Immediate mode on the 6502 and 65c02 because
 though it is a special character, at this point it is too deeply ingrained to
-change without major disruption (e.g. `lda.# 33`). On the 65816, we can
-substitute `lda.8` and `lda.16` etc. to distinguish between the different
-register modes. 
+change without major disruption (e.g. `lda.# 33`). 
+
+On the 65816, we move the hash to the suffix as well with `REP` and `SEP`, even
+though there are no other instructions in this family. Their SAN mnemonics are
+`rep.\#` and `sep.#`. This leave the option open to expand these instructions
+with further modes in the future. Also on this MPU, we accept the suffixes `.8`
+and `.16` for `.\#` in immediate mode - for instance, `lda.8` and `lda.16`
+instead of `lda.#`. This way, the assembler can compare what the programmer
+thinks the register size is with what it really turns out to be, a form of a
+built-in "assert". 
 
 These and other variants give us the following complete list of modes (for the
 65816):
@@ -204,7 +211,7 @@ These and other variants give us the following complete list of modes (for the
 |Implied                   |  `DEX`               |  `dex`
 |Absolute                  |  `LDA $1000`         |  `lda $1000`
 |Accumulator               |  `INC A`             |  `inc.a`
-|Immediate (6502, 65c02)   |  `LDA #$00`          |  `lda.# $00`
+|Immediate                 |  `LDA #$00`          |  `lda.# $00`
 |Immediate 8-bit (65816)   |  `LDA #$00`          |  `lda.8 $00`
 |Immediate 16-bit (65816)  |  `LDA #$00`          |  `lda.16 $00`
 |Absolute X indexed        |  `LDA $1000,X`       |  `lda.x $1000`
@@ -298,7 +305,7 @@ such as `lda.dily` -- in this case, the suffix wags the stem, so to speak.
 // --------------------------------------------------------
 == Conventions for assemblers
 
-These are merely suggestions
+These are merely suggestions. 
 
 
 === Number formatting

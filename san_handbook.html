@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="keywords" content="6502, 65c02, 65816, ISA, assembler, programming, 8-bit, vintage, retro">
+<meta name="keywords" content="6502, 65c02, 65816, ISA, assembler, programming, 8-bit, vintage, retro, WDC">
 <meta name="author" content="Scot W. Stevenson">
 <title>Simpler Assembler Notation (SAN) for the 6502, 65c02, and 65816</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -428,7 +428,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author" class="author">Scot W. Stevenson</span><br>
 <span id="email" class="email"><a href="mailto:scot.stevenson@gmail.com">scot.stevenson@gmail.com</a></span><br>
 <span id="revnumber">version BETA,</span>
-<span id="revdate">02. Jan 2019</span>
+<span id="revdate">12. Jan 2019</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -724,11 +724,19 @@ in traditional notation. This way, <code>LDA ($10,X)</code> becomes <code>lda.dx
 ($10),Y</code> becomes <code>lda.diy</code>.</p>
 </div>
 <div class="paragraph">
-<p>We keep the hash symbol (<code><mark></code>) for Immediate mode on the 6502 and 65c02 because
+<p>We keep the hash symbol (<code>#</code>) for Immediate mode on the 6502 and 65c02 because
 though it is a special character, at this point it is too deeply ingrained to
-change without major disruption (e.g. <code>lda.</mark> 33</code>). On the 65816, we can
-substitute <code>lda.8</code> and <code>lda.16</code> etc. to distinguish between the different
-register modes.</p>
+change without major disruption (e.g. <code>lda.# 33</code>).</p>
+</div>
+<div class="paragraph">
+<p>On the 65816, we move the hash to the suffix as well with <code>REP</code> and <code>SEP</code>, even
+though there are no other instructions in this family. Their SAN mnemonics are
+<code>rep.#</code> and <code>sep.#</code>. This leave the option open to expand these instructions
+with further modes in the future. Also on this MPU, we accept the suffixes <code>.8</code>
+and <code>.16</code> for <code>.#</code> in immediate mode - for instance, <code>lda.8</code> and <code>lda.16</code>
+instead of <code>lda.#</code>. This way, the assembler can compare what the programmer
+thinks the register size is with what it really turns out to be, a form of a
+built-in "assert".</p>
 </div>
 <div class="paragraph">
 <p>These and other variants give us the following complete list of modes (for the
@@ -764,7 +772,7 @@ register modes.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>inc.a</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate (6502, 65c02)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA #$00</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>lda.# $00</code></p></td>
 </tr>
@@ -1014,7 +1022,7 @@ such as <code>lda.dily</code>&#8201;&#8212;&#8201;in this case, the suffix wags 
 <h2 id="_conventions_for_assemblers">Conventions for assemblers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>These are merely suggestions</p>
+<p>These are merely suggestions.</p>
 </div>
 <div class="sect2">
 <h3 id="_number_formatting">Number formatting</h3>
@@ -1283,7 +1291,7 @@ David Eyes and Ron Lichty</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2019-01-02 21:07:48 CET
+Last updated 2019-01-12 07:33:15 CET
 </div>
 </div>
 </body>
